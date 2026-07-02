@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 import pandas as pd
 import gspread
 import feedparser
@@ -13,21 +12,24 @@ def connect_sheets():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-try:
-    creds_dict = dict(st.secrets["gcp_service_account"])
 
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(
-        creds_dict,
-        scope
-    )
+    try:
+        creds_dict = dict(st.secrets["gcp_service_account"])
 
-    client = gspread.authorize(creds)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(
+            creds_dict,
+            scope
+        )
 
-    return client.open("Content Performance Tracker")
+        client = gspread.authorize(creds)
 
-except Exception as e:
-    st.error(f"❌ Google Sheets Error: {e}")
-    st.stop()
+        return client.open("Content Performance Tracker")
+
+    except Exception as e:
+        st.error(f"❌ Google Sheets Error: {e}")
+        st.stop()
+
+
 # ---------------- CONFIG ----------------
 
 POSTS_TAB = "Reddit Posts"
