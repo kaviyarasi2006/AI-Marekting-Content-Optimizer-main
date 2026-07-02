@@ -30,10 +30,10 @@ def connect_sheets():
 
     # Try Streamlit Cloud credentials
     try:
-        if hasattr(st, "secrets") and "gcp_credentials" in st.secrets:
-            creds_dict = json.loads(st.secrets["gcp_credentials"])
-            if "private_key" in creds_dict:
-                creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+        if hasattr(st, "secrets") and "gcp_service_account" in st.secrets:
+            creds_dict = dict(st.secrets["gcp_service_account"])
+            # if "private_key" in creds_dict:
+            #     creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
             creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
             return gspread.authorize(creds).open("Content Performance Tracker")
     except Exception:
