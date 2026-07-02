@@ -86,7 +86,7 @@ Select a module from the **sidebar on the left** to begin using the application.
 """)
 
 # Simple system check at the bottom
-if "gcp_credentials" in st.secrets or os.path.exists("credentials.json"):
+if "gcp_service_account" in st.secrets or os.path.exists("credentials.json"):
     st.success("System Connection: Google Cloud Services Connected")
 else:
     st.error("System Connection: Credentials Missing")
