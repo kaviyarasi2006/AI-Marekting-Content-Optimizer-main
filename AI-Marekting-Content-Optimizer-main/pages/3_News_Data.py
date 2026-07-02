@@ -20,12 +20,10 @@ def connect_sheets():
     
     # First try to read Google credentials from Streamlit Cloud secrets
     try:
-        if hasattr(st, "secrets") and "gcp_credentials" in st.secrets:
-            creds_dict = json.loads(st.secrets["gcp_credentials"])
+        if hasattr(st, "secrets") and "gcp_service_account" in st.secrets:
+            creds_dict = dict(st.secrets["gcp_service_account"])
             
             # Fix private key formatting if required
-            if "private_key" in creds_dict:
-                creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
             
             creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
             client = gspread.authorize(creds)
