@@ -22,19 +22,18 @@ def get_secret(key_name):
     except ImportError:
         return None
 
-
 def connect_sheets():
-    scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
-def connect_sheets():
-
     scope = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
 
     try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            "credentials.json", scope
+        creds_dict = dict(st.secrets["gcp_service_account"])
+
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(
+            creds_dict,
+            scope
         )
 
         client = gspread.authorize(creds)
@@ -44,18 +43,8 @@ def connect_sheets():
         return sheet
 
     except Exception as e:
-        st.error(f"Google Sheets Error: {e}")
+        st.error(f"❌ Google Sheets Error: {e}")
         st.stop()
-
-    if os.path.exists("credentials.json"):
-        creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-    elif os.path.exists("../credentials.json"):
-        creds = ServiceAccountCredentials.from_json_keyfile_name("../credentials.json", scope)
-    else:
-        st.error("❌ Critical Error: No Google Credentials found!")
-        st.stop()
-
-    return gspread.authorize(creds).open("Content Performance Tracker")
 
 # ----- CONFIG -----
 
