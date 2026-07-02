@@ -13,18 +13,21 @@ def connect_sheets():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
+try:
+    creds_dict = dict(st.secrets["gcp_service_account"])
 
-    if os.path.exists("credentials.json"):
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            "credentials.json", scope
-        )
-        client = gspread.authorize(creds)
-        return client.open("Content Performance Tracker")
-    else:
-        st.error("❌ credentials.json file not found")
-        st.stop()
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        creds_dict,
+        scope
+    )
 
+    client = gspread.authorize(creds)
 
+    return client.open("Content Performance Tracker")
+
+except Exception as e:
+    st.error(f"❌ Google Sheets Error: {e}")
+    st.stop()
 # ---------------- CONFIG ----------------
 
 POSTS_TAB = "Reddit Posts"
@@ -150,4 +153,3 @@ with col2:
 
             else:
                 st.warning("⚠ No posts found.")
-
